@@ -1,94 +1,74 @@
-//your JS code here. If required.
-const submitBtn = document.getElementById("submit");
-const startScreen = document.getElementById("start-screen");
-const gameScreen = document.getElementById("game-screen");
+const submit = document.getElementById("submit");
+const player1 = document.getElementById("player1");
+const player2 = document.getElementById("player2");
+const form = document.getElementById("form");
+const game = document.getElementById("game");
 const message = document.querySelector(".message");
-const cells = document.querySelectorAll(".cell");
 
-let player1 = "";
-let player2 = "";
 let currentPlayer = "x";
-let currentName = "";
-let board = ["", "", "", "", "", "", "", "", ""];
-let gameOver = false;
+let playerOne = "";
+let playerTwo = "";
 
-submitBtn.addEventListener("click", () => {
-    player1 = document.getElementById("player-1").value.trim();
-    player2 = document.getElementById("player-2").value.trim();
-
-    if (!player1 || !player2) return;
-
-    startScreen.style.display = "none";
-    gameScreen.style.display = "block";
-
-    currentPlayer = "x";
-    currentName = player1;
-
-    message.textContent = `${player1}, you're up`;
-});
-
-const winningCombinations = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
+const winPatterns = [
+    ["1","2","3"],
+    ["4","5","6"],
+    ["7","8","9"],
+    ["1","4","7"],
+    ["2","5","8"],
+    ["3","6","9"],
+    ["1","5","9"],
+    ["3","5","7"]
 ];
 
-cells.forEach((cell, index) => {
-    cell.addEventListener("click", () => {
-        if (board[index] !== "" || gameOver) return;
+submit.addEventListener("click", function () {
+    playerOne = player1.value;
+    playerTwo = player2.value;
 
-        board[index] = currentPlayer;
+    form.style.display = "none";
+    game.style.display = "block";
+
+    message.textContent = `${playerOne}, you're up`;
+});
+
+document.querySelectorAll(".cell").forEach(cell => {
+
+    cell.addEventListener("click", function () {
+
+        if (cell.textContent !== "") return;
+
         cell.textContent = currentPlayer;
 
-        const winner = checkWinner();
-
-        if (winner) {
-            const winnerName = currentPlayer === "x" ? player1 : player2;
-
-            winner.forEach(i => {
-                cells[i].classList.add("winner");
-            });
-
-            message.textContent = `${winnerName}, congratulations you won!`;
-            gameOver = true;
-            return;
-        }
-
-        if (board.every(value => value !== "")) {
-            message.textContent = "It's a draw!";
-            gameOver = true;
+        if (checkWinner()) {
+            const winner = currentPlayer === "x" ? playerOne : playerTwo;
+            message.textContent = `${winner} congratulations you won!`;
             return;
         }
 
         if (currentPlayer === "x") {
             currentPlayer = "o";
-            currentName = player2;
+            message.textContent = `${playerTwo}, you're up`;
         } else {
             currentPlayer = "x";
-            currentName = player1;
+            message.textContent = `${playerOne}, you're up`;
         }
 
-        message.textContent = `${currentName}, you're up`;
     });
+
 });
 
 function checkWinner() {
-    for (let combo of winningCombinations) {
-        const [a, b, c] = combo;
 
-        if (
-            board[a] &&
-            board[a] === board[b] &&
-            board[a] === board[c]
-        ) {
-            return combo;
+    for (let pattern of winPatterns) {
+
+        const a = document.getElementById(pattern[0]).textContent;
+        const b = document.getElementById(pattern[1]).textContent;
+        const c = document.getElementById(pattern[2]).textContent;
+
+        if (a !== "" && a === b && b === c) {
+            return true;
         }
+
     }
 
-    return null;
+    return false;
 }
