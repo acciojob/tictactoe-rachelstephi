@@ -34,9 +34,9 @@ document.querySelectorAll(".cell").forEach(cell => {
 
     cell.addEventListener("click", function () {
 
-        if (cell.textContent !== "") return;
+        if (cell.innerText !== "") return;
 
-        cell.textContent = currentPlayer;
+       cell.innerText = currentPlayer;
 
         if (checkWinner()) {
             const winner = currentPlayer === "x" ? playerOne : playerTwo;
@@ -60,9 +60,9 @@ function checkWinner() {
 
     for (let pattern of winPatterns) {
 
-        const a = document.getElementById(pattern[0]).textContent;
-        const b = document.getElementById(pattern[1]).textContent;
-        const c = document.getElementById(pattern[2]).textContent;
+        const a = document.getElementById(pattern[0]).innerText;
+const b = document.getElementById(pattern[1]).innerText;
+const c = document.getElementById(pattern[2]).innerText;
 
         if (a !== "" && a === b && b === c) {
             return true;
